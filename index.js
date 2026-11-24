@@ -2,6 +2,7 @@ import { log } from "console";
 import express from "express";
 import fs from "fs";
 import path from "path";
+import { json } from "stream/consumers";
 
 const app =express() ;
 
@@ -69,6 +70,32 @@ app.get("/todos/:id",(req,res)=>{
 })
 
 
+//edit 
+
+app.put("/todos/:id",(req,res)=>{
+  const id =req.params.id;
+
+  fs.readFile(filepath,"utf-8",(err,data)=>{
+    if(err){
+      return res.status(500).send("error")
+    }
+    const todos =JSON.parse(data);
+    const index =todos.findIndex((todo)=>todo.id == id);
+
+    if (index === -1) {
+            return res.status(404).send("Todo not found");
+        }
+
+    todos[index].title =req.body.title  
+    
+    fs.writeFile(filepath,JSON.stringify(todos,null,2),(err)=>{
+      if (err) {
+                return res.status(500).send("Error writing file");
+            }
+       res.status(200).json(todos[index])     
+    })
+  })
+})
 
 
 app.listen(3000,()=>{
