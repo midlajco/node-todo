@@ -21,6 +21,36 @@ app.get("/todos",(req,res) =>{
     res.status(200).json(todos)
   })})
 
+//post
+
+
+app.post("/todos",(req,res)=>{
+
+
+  const newTodo ={
+    id:Date.now(),
+    title:req.body.title,
+    completed:false
+  };
+
+   fs.readFile(filepath,"utf-8",(err,data)=>{
+    if(err){
+      return res.status(500).send("read erro");
+    }
+    
+    const todos =JSON.parse(data) ;
+    todos.push(newTodo);
+    
+    fs.writeFile(filepath,JSON.stringify(todos,null,2),(err)=>{
+        if(err){
+          return res.status(500).send("error writng")
+        }
+        res.status(201).json(newTodo)
+    })
+
+   })
+
+})
 
 
 
