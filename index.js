@@ -9,6 +9,22 @@ app.use(express.json());
 
 const filepath =path.join(import.meta.dirname,"todos.json")
 
+
+//get all todos
+app.get("/todos",(req,res) =>{
+  fs.readFile(filepath,"utf-8",(err,data)=>{
+    if(err){
+      return res.status(500).send("error tp read")
+    }
+    const todos =JSON.parse(data)
+    console.log(todos);
+    res.status(200).json(todos)
+  })})
+
+
+
+
+
 app.listen(3000,()=>{
   console.log("server running");
   
