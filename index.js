@@ -52,6 +52,22 @@ app.post("/todos",(req,res)=>{
 
 })
 
+//get one todo
+app.get("/todos/:id",(req,res)=>{
+  const id = req.params.id;
+  fs.readFile(filepath,"utf-8",(err,data)=>{
+    if(err){
+      return res.status(500).send("error")
+    }
+    const todos =JSON.parse(data);
+    const todo =todos.filter((item)=>item.id===id);
+    if(!todo){
+      return res.status(404).send("not found");
+    }
+    res.status(200).json(todo)
+  })
+})
+
 
 
 
